@@ -147,6 +147,9 @@ install:
 	
 uninstall:
 	@for file in $(install_programs); do $(UNINSTALL_BIN);$(UNINSTALL_MAN1);done
+	rm -f /usr/lib/libpdf2swf.so
+	rm -f /usr/lib/libpdf2swf.so.1
+	rm -f /usr/include/libpdf2swf.h
 
 clean: 
 	rm -f *.o *.obj *.lo *.la *~ gmon.out

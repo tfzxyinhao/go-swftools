@@ -3,10 +3,10 @@ srcdir = @srcdir@
 top_srcdir = @top_srcdir@
 include ../Makefile.common
 
-install_programs = wav2swf$(E) @PNG2SWF@ swfcombine$(E) swfstrings$(E) swfextract$(E) swfdump$(E) swfc$(E) @JPEG2SWF@ @GIF2SWF@ swfbbox$(E) font2swf$(E) swfrender$(E) as3compile$(E) @PDF2SWF@ @PDF2PDF@  libpdf2swf.so
+install_programs = wav2swf$(E) @PNG2SWF@ swfcombine$(E) swfstrings$(E) swfextract$(E) swfdump$(E) swfc$(E) @JPEG2SWF@ @GIF2SWF@ swfbbox$(E) font2swf$(E) swfrender$(E) as3compile$(E) @PDF2SWF@ @PDF2PDF@
 programs = $(install_programs) swfbytes$(E) ttftool$(E)
 
-all: $(programs)
+all: $(programs) libpdf2swf.so
 
 wav2swf.$(O): wav2swf.c ../lib/wav.h
 	$(C) wav2swf.c -o $@

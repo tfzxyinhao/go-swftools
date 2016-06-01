@@ -94,7 +94,7 @@ ErrorCode convert(const char* filename, int page, const char* outputname,const c
 	}
 
 
-	is_in_range(0x7fffffff, pagerange);
+	//is_in_range(0x7fffffff, pagerange);
 
 	char fullname[256];
 	if (password && *password) {
@@ -139,12 +139,11 @@ ErrorCode convert(const char* filename, int page, const char* outputname,const c
 
 	for (pagenr = 1; pagenr <= pdf->num_pages; pagenr++)
 	{
-		if (is_in_range(pagenr, pagerange)) {
-			char mapping[80];
-			sprintf(mapping, "%d:%d", pagenr, frame);
-			pdf->setparameter(pdf, "pagemap", mapping);
-			pagenum++;
-		}
+		//if (is_in_range(pagenr, pagerange)) {}
+		char mapping[80];
+		sprintf(mapping, "%d:%d", pagenr, frame);
+		pdf->setparameter(pdf, "pagemap", mapping);
+		pagenum++;
 		if (pagenum == xnup*ynup || (pagenr == pdf->num_pages && pagenum > 1)) {
 			pagenum = 0;
 			frame++;
@@ -162,13 +161,12 @@ ErrorCode convert(const char* filename, int page, const char* outputname,const c
 
 	for (pagenr = 1; pagenr <= pdf->num_pages; pagenr++)
 	{
-		if (is_in_range(pagenr, pagerange)) {
-			gfxpage_t* page = pages[pagenum].page = pdf->getpage(pdf, pagenr);
-			pages[pagenum].x = 0;
-			pages[pagenum].y = 0;
-			pages[pagenum].page = page;
-			pagenum++;
-		}
+		//if (is_in_range(pagenr, pagerange)) {}
+		gfxpage_t* page = pages[pagenum].page = pdf->getpage(pdf, pagenr);
+		pages[pagenum].x = 0;
+		pages[pagenum].y = 0;
+		pages[pagenum].page = page;
+		pagenum++;
 
 		if (pagenum == xnup*ynup || (pagenr == pdf->num_pages && pagenum > 1)) {
 

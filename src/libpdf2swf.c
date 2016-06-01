@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
@@ -75,7 +76,7 @@ gfxdevice_t* create_output_device()
 	return out;
 }
 
-ErrorCode convert(const char* filename, int page, const char* outputname,const char* password)
+ErrorCode convert(const char* filename, const char* pages, const char* outputname,const char* password)
 {
 	int ret;
 	char buf[256];
@@ -92,18 +93,15 @@ ErrorCode convert(const char* filename, int page, const char* outputname,const c
 	{
 		return PARAM_ERROR;
 	}
-
-
-	//is_in_range(0x7fffffff, pagerange);
-
+	
 	char fullname[256];
-	if (password && *password) {
+	if (password && *password && strlen(password)) {
 		sprintf(fullname, "%s|%s", filename, password);
 		filename = fullname;
 	}
 
-	if (pagerange)
-		driver->setparameter(driver, "pages", pagerange);
+	if (pages)
+		driver->setparameter(driver, "pages", pages);
 	
 	char*u = 0;
 	if ((u = strchr(outputname, '%'))) {
@@ -136,10 +134,9 @@ ErrorCode convert(const char* filename, int page, const char* outputname,const c
 	int pagenum = 0;
 	int frame = 1;
 	int pagenr;
-
+	printf("pdf pages:%d\n",pdf->num_pages);
 	for (pagenr = 1; pagenr <= pdf->num_pages; pagenr++)
 	{
-		//if (is_in_range(pagenr, pagerange)) {}
 		char mapping[80];
 		sprintf(mapping, "%d:%d", pagenr, frame);
 		pdf->setparameter(pdf, "pagemap", mapping);
@@ -149,19 +146,19 @@ ErrorCode convert(const char* filename, int page, const char* outputname,const c
 			frame++;
 		}
 	}
-
+	
 	if (pagerange && !pagenum && frame == 1) {
 		return RANGE_ERROR;
 	}
 
 	pagenum = 0;
-
+	printf("run here 1\n");
 	gfxdevice_t*out = create_output_device();
 	pdf->prepare(pdf, out);
 
 	for (pagenr = 1; pagenr <= pdf->num_pages; pagenr++)
 	{
-		//if (is_in_range(pagenr, pagerange)) {}
+		printf("treat page:%d\n",pagenr);
 		gfxpage_t* page = pages[pagenum].page = pdf->getpage(pdf, pagenr);
 		pages[pagenum].x = 0;
 		pages[pagenum].y = 0;

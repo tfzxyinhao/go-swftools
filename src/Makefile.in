@@ -142,12 +142,14 @@ install:
 	$(mkinstalldirs) $(man1dir)
 	@for file in $(install_programs); do if test -f $$file;then $(INSTALL_BIN);$(INSTALL_MAN1);fi;done
 	cp libpdf2swf.so /usr/lib/libpdf2swf.so
+	cp libpdf2swf.so /usr/lib64/libpdf2swf.so
 	cp libpdf2swf.so /usr/lib/libpdf2swf.so.1
 	cp libpdf2swf.h /usr/include/libpdf2swf.h
 	
 uninstall:
 	@for file in $(install_programs); do $(UNINSTALL_BIN);$(UNINSTALL_MAN1);done
 	rm -f /usr/lib/libpdf2swf.so
+	rm -f /usr/lib64/libpdf2swf.so
 	rm -f /usr/lib/libpdf2swf.so.1
 	rm -f /usr/include/libpdf2swf.h
 

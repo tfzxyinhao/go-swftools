@@ -8,4 +8,4 @@ typedef enum tagErrorCode
 	SAVE_ERROR
 }ErrorCode;
 
-ErrorCode convert(const char* filename, int page, const char* outputname, const char* password);
+ErrorCode convert(const char* filename, const char* pages, const char* outputname, const char* password);

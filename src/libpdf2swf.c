@@ -76,7 +76,7 @@ gfxdevice_t* create_output_device()
 	return out;
 }
 
-ErrorCode convert(const char* filename, const char* pages, const char* outputname,const char* password)
+ErrorCode convert(const char* filename, const char* page_range, const char* outputname,const char* password)
 {
 	int ret;
 	char buf[256];
@@ -100,8 +100,8 @@ ErrorCode convert(const char* filename, const char* pages, const char* outputnam
 		filename = fullname;
 	}
 
-	if (pages)
-		driver->setparameter(driver, "pages", pages);
+	if (page_range)
+		driver->setparameter(driver, "pages", page_range);
 	
 	char*u = 0;
 	if ((u = strchr(outputname, '%'))) {

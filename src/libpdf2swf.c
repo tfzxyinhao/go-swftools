@@ -100,8 +100,8 @@ ErrorCode convert(const char* filename, const char* page_range, const char* outp
 		filename = fullname;
 	}
 
-	// if (page_range)
-	// 	driver->setparameter(driver, "pages", page_range);
+	 if (page_range)
+	 	driver->setparameter(driver, "pages", page_range);
 	
 	char*u = 0;
 	if ((u = strchr(outputname, '%'))) {
@@ -134,7 +134,7 @@ ErrorCode convert(const char* filename, const char* page_range, const char* outp
 	int pagenum = 0;
 	int frame = 1;
 	int pagenr;
-	printf("pdf pages:%d,one_file_per_page:%d\n",pdf->num_pages, one_file_per_page);
+
 	for (pagenr = 1; pagenr <= pdf->num_pages; pagenr++)
 	{
 		char mapping[80];
@@ -152,13 +152,11 @@ ErrorCode convert(const char* filename, const char* page_range, const char* outp
 	}
 
 	pagenum = 0;
-	printf("run here 1\n");
 	gfxdevice_t*out = create_output_device();
 	pdf->prepare(pdf, out);
 
 	for (pagenr = 1; pagenr <= pdf->num_pages; pagenr++)
 	{
-		printf("treat page:%d\n",pagenr);
 		gfxpage_t* page = pages[pagenum].page = pdf->getpage(pdf, pagenr);
 		pages[pagenum].x = 0;
 		pages[pagenum].y = 0;
@@ -208,7 +206,7 @@ ErrorCode convert(const char* filename, const char* page_range, const char* outp
 				int y = t / xnup;
 				int xpos = x > 0 ? xmax[x - 1] : 0;
 				int ypos = y > 0 ? ymax[y - 1] : 0;
-				printf("render page:%d,custom_move:%d\n", pagenr, custom_move, move_x,xpos,ypos);
+				
 				pages[t].page->rendersection(pages[t].page, out, custom_move ? move_x : xpos,
 					custom_move ? move_y : ypos,
 					custom_clip ? clip_x1 : 0 + xpos,

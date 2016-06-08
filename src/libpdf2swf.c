@@ -32,13 +32,10 @@ static gfxdevice_t*out = 0;
 
 static int maxwidth = 0, maxheight = 0;
 
-static char * pagerange = 0;
 static char * password = 0;
 
 static int zlib = 0;
 
-static char * preloader = 0;
-static char * viewer = 0;
 static int xnup = 1;
 static int ynup = 1;
 
@@ -76,12 +73,11 @@ gfxdevice_t* create_output_device()
 	return out;
 }
 
-ErrorCode convert(const char* filename, const char* page_range, const char* outputname,const char* password)
+ErrorCode convert(const char* filename, const char* pagerange, const char* outputname,const char* password)
 {
-	int ret;
+	int ret,t;
 	char buf[256];
 	int numfonts = 0;
-	int t;
 	char t1searchpath[1024];
 	int nup_pos = 0;
 	int x, y;
@@ -100,9 +96,8 @@ ErrorCode convert(const char* filename, const char* page_range, const char* outp
 		filename = fullname;
 	}
 
-	printf("page range:%s\n", pagerange);
 	 if (page_range)
-	 	driver->setparameter(driver, "pages", page_range);
+	 	driver->setparameter(driver, "pages", pagerange);
 	
 	char*u = 0;
 	if ((u = strchr(outputname, '%'))) {
@@ -140,7 +135,6 @@ ErrorCode convert(const char* filename, const char* page_range, const char* outp
 	{
 		char mapping[80];
 		sprintf(mapping, "%d:%d", pagenr, frame);
-		printf("set pagemap:%d,%d\n", pagenr, frame);
 		pdf->setparameter(pdf, "pagemap", mapping);
 		pagenum++;
 		if (pagenum == xnup*ynup || (pagenr == pdf->num_pages && pagenum > 1)) {

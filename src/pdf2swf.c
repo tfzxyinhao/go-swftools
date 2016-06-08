@@ -732,7 +732,7 @@ int main(int argn, char *argv[])
 		}
 		printf("<notice> outputting one file per page");
 		one_file_per_page = 1;
-		char*pattern = (char*)malloc(strlen(outputname) + 2);
+		char* pattern = (char*)malloc(strlen(outputname) + 2);
 		/* convert % to %d */
 		int l = u - outputname + 1;
 		memcpy(pattern, outputname, l);
@@ -769,7 +769,7 @@ int main(int argn, char *argv[])
 		if (is_in_range(pagenr, pagerange)) {
 			char mapping[80];
 			sprintf(mapping, "%d:%d", pagenr, frame);
-			printf("pagemap :%d,%d", pagenr, frame);
+			printf("pagemap :%d,%d\n", pagenr, frame);
 			pdf->setparameter(pdf, "pagemap", mapping);
 			pagenum++;
 		}

@@ -100,6 +100,7 @@ ErrorCode convert(const char* filename, const char* page_range, const char* outp
 		filename = fullname;
 	}
 
+	printf("page range:%s\n", pagerange);
 	 if (page_range)
 	 	driver->setparameter(driver, "pages", page_range);
 	
@@ -139,6 +140,7 @@ ErrorCode convert(const char* filename, const char* page_range, const char* outp
 	{
 		char mapping[80];
 		sprintf(mapping, "%d:%d", pagenr, frame);
+		printf("set pagemap:%d,%d\n", pagenr, frame);
 		pdf->setparameter(pdf, "pagemap", mapping);
 		pagenum++;
 		if (pagenum == xnup*ynup || (pagenr == pdf->num_pages && pagenum > 1)) {

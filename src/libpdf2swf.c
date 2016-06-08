@@ -55,7 +55,7 @@ int custom_clip = 0;
 static int system_quiet = 0;
 static gfxdevice_t swf, wrap, rescale;
 
-static char is_in_range(int t, char* irange)
+static bool is_in_range(int t, const char* irange)
 {
 	char*pos = irange;
 	char*digits;
@@ -65,7 +65,7 @@ static char is_in_range(int t, char* irange)
 	char tmp;
 
 	if (!irange)  // no range resembles (-OO,OO)
-		return 1;
+		return false;
 
 	while (*pos)
 	{
@@ -77,7 +77,7 @@ static char is_in_range(int t, char* irange)
 			digits++;
 		if (digits == pos) {
 			//fprintf(stderr, "Error: \"%s\" is not a valid format (digit expected)\n", irange);
-			exit(1);
+			return false;
 		}
 
 		tmp = *digits; *digits = 0;
@@ -101,7 +101,7 @@ static char is_in_range(int t, char* irange)
 		{
 			if (range) {
 				//fprintf(stderr, "Error: \"%s\" is not a valid format (too many '-'s)\n", irange);
-				exit(1);
+				return false;
 			}
 			last = num;
 			range = 1;
@@ -121,8 +121,8 @@ static char is_in_range(int t, char* irange)
 		}
 	}
 	if (range && last <= t)
-		return 1;
-	return 0;
+		return true;
+	return false;
 }
 
 gfxdevice_t* create_output_device()
@@ -152,8 +152,6 @@ ErrorCode convert(const char* filename, const char* pagerange, const char* outpu
 	int nup_pos = 0;
 	int x, y;
 	int one_file_per_page = 0;
-
-	is_in_range(0x7fffffff, pagerange);
 
 	driver = gfxsource_pdf_create();
 	if (!filename || !outputname)

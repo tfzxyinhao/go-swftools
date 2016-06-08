@@ -73,9 +73,9 @@ gfxdevice_t* create_output_device()
 	return out;
 }
 
-ErrorCode convert(const char* filename, const char* pagerange, const char* outputname,const char* password)
+ErrorCode convert(const char* filename, const char* pagerange, const char* outputname, const char* password)
 {
-	int ret,t;
+	int ret, t;
 	char buf[256];
 	int numfonts = 0;
 	char t1searchpath[1024];
@@ -89,16 +89,16 @@ ErrorCode convert(const char* filename, const char* pagerange, const char* outpu
 	{
 		return PARAM_ERROR;
 	}
-	
+
 	char fullname[256];
 	if (password && *password && strlen(password)) {
 		sprintf(fullname, "%s|%s", filename, password);
 		filename = fullname;
 	}
 
-	 if (page_range)
-	 	driver->setparameter(driver, "pages", pagerange);
-	
+	if (pagerange)
+		driver->setparameter(driver, "pages", pagerange);
+
 	char*u = 0;
 	if ((u = strchr(outputname, '%'))) {
 		if (strchr(u + 1, '%') ||
@@ -142,7 +142,7 @@ ErrorCode convert(const char* filename, const char* pagerange, const char* outpu
 			frame++;
 		}
 	}
-	
+
 	if (pagerange && !pagenum && frame == 1) {
 		return RANGE_ERROR;
 	}
@@ -202,7 +202,7 @@ ErrorCode convert(const char* filename, const char* pagerange, const char* outpu
 				int y = t / xnup;
 				int xpos = x > 0 ? xmax[x - 1] : 0;
 				int ypos = y > 0 ? ymax[y - 1] : 0;
-				
+
 				pages[t].page->rendersection(pages[t].page, out, custom_move ? move_x : xpos,
 					custom_move ? move_y : ypos,
 					custom_clip ? clip_x1 : 0 + xpos,

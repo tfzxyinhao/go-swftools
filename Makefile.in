@@ -35,6 +35,7 @@ clean-local:
 
 uninstall-local:
 	rm -rf $(pkgdatadir)
+	rm -rf $(GOPATH)/src/pdf2swf
 
 all-local:
 	@true

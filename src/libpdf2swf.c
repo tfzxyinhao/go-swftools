@@ -55,17 +55,17 @@ int custom_clip = 0;
 static int system_quiet = 0;
 static gfxdevice_t swf, wrap, rescale;
 
-static bool is_in_range(int t, const char* irange)
+static char is_in_range(int t, const char* irange)
 {
-	char*pos = irange;
-	char*digits;
+	const char* pos = irange;
+	char *digits;
 	int num;
 	char range = 0;
 	int last = 0;
 	char tmp;
 
 	if (!irange)  // no range resembles (-OO,OO)
-		return false;
+		return 0;
 
 	while (*pos)
 	{
@@ -77,7 +77,7 @@ static bool is_in_range(int t, const char* irange)
 			digits++;
 		if (digits == pos) {
 			//fprintf(stderr, "Error: \"%s\" is not a valid format (digit expected)\n", irange);
-			return false;
+			return 0;
 		}
 
 		tmp = *digits; *digits = 0;
@@ -101,7 +101,7 @@ static bool is_in_range(int t, const char* irange)
 		{
 			if (range) {
 				//fprintf(stderr, "Error: \"%s\" is not a valid format (too many '-'s)\n", irange);
-				return false;
+				return 0;
 			}
 			last = num;
 			range = 1;
@@ -121,8 +121,8 @@ static bool is_in_range(int t, const char* irange)
 		}
 	}
 	if (range && last <= t)
-		return true;
-	return false;
+		return 1;
+	return 0;
 }
 
 gfxdevice_t* create_output_device()

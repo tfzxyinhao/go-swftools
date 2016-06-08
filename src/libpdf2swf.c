@@ -55,6 +55,76 @@ int custom_clip = 0;
 static int system_quiet = 0;
 static gfxdevice_t swf, wrap, rescale;
 
+static char is_in_range(int t, char* irange)
+{
+	char*pos = irange;
+	char*digits;
+	int num;
+	char range = 0;
+	int last = 0;
+	char tmp;
+
+	if (!irange)  // no range resembles (-OO,OO)
+		return 1;
+
+	while (*pos)
+	{
+		while (*pos == ' ' || *pos == '\r' || *pos == '\n' || *pos == '\t')
+			pos++;
+
+		digits = pos;
+		while (*digits >= '0' && *digits <= '9')
+			digits++;
+		if (digits == pos) {
+			//fprintf(stderr, "Error: \"%s\" is not a valid format (digit expected)\n", irange);
+			exit(1);
+		}
+
+		tmp = *digits; *digits = 0;
+		num = atoi(pos);
+		*digits = tmp;
+		pos = digits;
+
+		while (*pos == ' ' || *pos == '\r' || *pos == '\n' || *pos == '\t')
+			pos++;
+
+		if (range && last <= t && num >= t)
+			return 1;
+		if (range) {
+			range = 0;
+			if (*pos)
+				pos++;
+			continue;
+		}
+
+		if (*pos == '-')
+		{
+			if (range) {
+				//fprintf(stderr, "Error: \"%s\" is not a valid format (too many '-'s)\n", irange);
+				exit(1);
+			}
+			last = num;
+			range = 1;
+			if (*pos)
+				pos++;
+			continue;
+		}
+		else
+		{
+			/* if it isn't a '-', we assume it is a seperator like
+			',', ';', ':', whatever. */
+			if (t == num)
+				return 1;
+			if (*pos)
+				pos++;
+			continue;
+		}
+	}
+	if (range && last <= t)
+		return 1;
+	return 0;
+}
+
 gfxdevice_t* create_output_device()
 {
 	gfxdevice_swf_init(&swf);
@@ -83,6 +153,7 @@ ErrorCode convert(const char* filename, const char* pagerange, const char* outpu
 	int x, y;
 	int one_file_per_page = 0;
 
+	is_in_range(0x7fffffff, pagerange);
 
 	driver = gfxsource_pdf_create();
 	if (!filename || !outputname)
@@ -133,10 +204,12 @@ ErrorCode convert(const char* filename, const char* pagerange, const char* outpu
 
 	for (pagenr = 1; pagenr <= pdf->num_pages; pagenr++)
 	{
-		char mapping[80];
-		sprintf(mapping, "%d:%d", pagenr, frame);
-		pdf->setparameter(pdf, "pagemap", mapping);
-		pagenum++;
+		if (is_in_range(pagenr, pagerange)) {
+			char mapping[80];
+			sprintf(mapping, "%d:%d", pagenr, frame);
+			pdf->setparameter(pdf, "pagemap", mapping);
+			pagenum++;
+		}
 		if (pagenum == xnup*ynup || (pagenr == pdf->num_pages && pagenum > 1)) {
 			pagenum = 0;
 			frame++;
@@ -153,11 +226,13 @@ ErrorCode convert(const char* filename, const char* pagerange, const char* outpu
 
 	for (pagenr = 1; pagenr <= pdf->num_pages; pagenr++)
 	{
-		gfxpage_t* page = pages[pagenum].page = pdf->getpage(pdf, pagenr);
-		pages[pagenum].x = 0;
-		pages[pagenum].y = 0;
-		pages[pagenum].page = page;
-		pagenum++;
+		if (is_in_range(pagenr, pagerange)) {
+			gfxpage_t* page = pages[pagenum].page = pdf->getpage(pdf, pagenr);
+			pages[pagenum].x = 0;
+			pages[pagenum].y = 0;
+			pages[pagenum].page = page;
+			pagenum++;
+		}
 
 		if (pagenum == xnup*ynup || (pagenr == pdf->num_pages && pagenum > 1)) {
 

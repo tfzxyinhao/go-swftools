@@ -5,12 +5,9 @@ package pdf2swf
 #cgo LDFLAGS:-L/lib64 -L/usr/lib64 -lpdf2swf
 #include <libpdf2swf.h>
 */
-import (
-	"C"
-	"log"
-	"os"
-	"path"
-)
+import "C"
+import "os"
+import "path"
 
 /*
    pdf : pdf  文件的路径
@@ -20,11 +17,10 @@ import (
    password : pdf的密码,没有时传空字符串
 */
 func ToSWF(pdf, output, pages, password string) int {
-	dir, err = os.Getwd()
-	if err != nil {
+	dir := os.Getenv("GOPATH")
+	if len(dir) < 1 {
 		return 0
 	} else {
-		log.Println("current dir:", dir)
-		return int(C.convert(C.CString(pdf), C.CString(pages), C.CString(output), C.CString(password)), C.CString(path.Join(dir, "lang")))
+		return int(C.convert(C.CString(pdf), C.CString(pages), C.CString(output), C.CString(password), C.CString(path.Join(dir, "src/pdf2swf/lang"))))
 	}
 }

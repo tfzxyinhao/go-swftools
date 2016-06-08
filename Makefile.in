@@ -24,6 +24,7 @@ all install uninstall clean:
 installgo :	
 	mkdir -p $(GOPATH)/src/pdf2swf
 	cp -f pdf2swf.go $(GOPATH)/src/pdf2swf/
+	cp -rf lang/ $(GOPATH)/src/pdf2swf/
 distclean:
 	$(MAKE) clean
 	rm -f config.status config.cache config.h Makefile Makefile.common libtool

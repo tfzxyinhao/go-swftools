@@ -143,7 +143,7 @@ gfxdevice_t* create_output_device()
 	return out;
 }
 
-ErrorCode convert(const char* filename, const char* pagerange, const char* outputname, const char* password)
+ErrorCode convert(const char* filename, const char* pagerange, const char* outputname, const char* password,const char* langDir)
 {
 	int ret, t;
 	char buf[256];
@@ -167,6 +167,9 @@ ErrorCode convert(const char* filename, const char* pagerange, const char* outpu
 
 	if (pagerange)
 		driver->setparameter(driver, "pages", pagerange);
+
+	if (langDir)
+		driver->setparameter(driver, "languagedir", langDir);
 
 	char*u = 0;
 	if ((u = strchr(outputname, '%'))) {
